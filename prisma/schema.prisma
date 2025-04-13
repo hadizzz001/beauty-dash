@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  price       String
+  discount    String
+  img         String[]
+  category    String
+  subcategory String
+  stock       String
+  arrival     String   @default("no")
+}
+
+model Category {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  name String   @unique
+  img  String[]
+}
+
+model Subcategory {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String @unique
+  category String
+}
+
+model Offer {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  code String
+  per  Int
+}
+
+model Order {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  userInfo  Json
+  cartItems Json
+  total     String
+  delivery  String
+  code      String?
+  paid      Boolean @default(false)
+  num       String?
+  remark    String?
+  rate      Float
+  cur       String
+  pre      Boolean? @default(false)
+  date      String
+}
+
+model Review {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  date        DateTime @default(now()) @db.Date
+}
