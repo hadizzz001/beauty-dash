@@ -58,6 +58,7 @@ model Review {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
+  stars String
   date        DateTime @default(now()) @db.Date
 }
 
