@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import Upload from '../components/Upload';
-import { redirect, useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 const ManageCategory = () => {
   const [formData, setFormData] = useState({ name: '' , img: [] });
   const [editFormData, setEditFormData] = useState({ id: '', name: '', img: [] });
   const [message, setMessage] = useState('');
   const [categories, setCategories] = useState([]);
-  const [img, setImg] = useState([]); // Store images in an array
+  const [img, setImg] = useState([]);  
   const [editMode, setEditMode] = useState(false);
-  const router = useRouter();
-  // Fetch all categories
+ 
   const fetchCategories = async () => {
     try {
       const res = await fetch('/api/category', { method: 'GET' });
@@ -31,9 +30,7 @@ const ManageCategory = () => {
     fetchCategories();
   }, []);
  
-  
-
-  // Add category
+   
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -56,8 +53,7 @@ const ManageCategory = () => {
       setMessage(`Error: ${errorData.error}`);
     }
   };
-
-  // Edit category
+ 
   const handleEdit = (category) => {
     setEditMode(true);
     setEditFormData({
@@ -98,8 +94,7 @@ const ManageCategory = () => {
       setMessage('An error occurred while updating the category.'); 
     }
   };
-
-  // Delete category
+ 
   const handleDelete = async (id) => {
     if (confirm(`Are you sure you want to delete this category?`)) {
       try {
@@ -122,7 +117,7 @@ const ManageCategory = () => {
 
   const handleImgChange = (url) => {
     if (url) {
-      setImg(url); // Update img state with new image URL
+      setImg(url); 
     }
   };
 
@@ -149,8 +144,7 @@ const ManageCategory = () => {
             }
             required
           />
-        </div>
-       
+        </div> 
         <Upload onFilesUpload={handleImgChange} />
         <button type="submit" className="bg-blue-500 text-white px-4 py-2">
           {editMode ? 'Update Category' : 'Add category'}
@@ -210,8 +204,7 @@ const ManageCategory = () => {
       </tr>
     )}
   </tbody>
-</table>
-
+</table> 
       <style
           dangerouslySetInnerHTML={{
             __html:
@@ -222,4 +215,4 @@ const ManageCategory = () => {
   );
 };
 
-export default ManageCategory;
+export default ManageCategory; 

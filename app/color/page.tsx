@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { redirect } from 'next/navigation';
+import { useState, useEffect } from 'react'; 
 import Upload from '../components/Upload';
 
 const ManageCategory = () => {
-  const [formData, setFormData] = useState({ name: '', category: '', img: [] });
-  const [editFormData, setEditFormData] = useState({ id: '', name: '', category: '', img: [] });
+  const [formData, setFormData] = useState({ code: '', category: '', img: [] });
+  const [editFormData, setEditFormData] = useState({ id: '', code: '', category: '', img: [] });
   const [message, setMessage] = useState('');
   const [subCategories, setSubCategories] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
@@ -17,7 +16,7 @@ const ManageCategory = () => {
     const fetchAll = async () => {
       try {
         const [subRes, catRes] = await Promise.all([
-          fetch('/api/sub'),
+          fetch('/api/color'),
           fetch('/api/category'),
         ]);
 
@@ -41,7 +40,7 @@ const ManageCategory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('/api/sub', {
+    const res = await fetch('/api/color', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
@@ -49,8 +48,8 @@ const ManageCategory = () => {
 
     if (res.ok) {
       setMessage('Added successfully!');
-      setFormData({ name: '', category: '', img: [] });
-      window.location.href = '/sub';
+      setFormData({ code: '', category: '', img: [] });
+      window.location.href = '/color';
     } else {
       const errorData = await res.json();
       setMessage(`Error: ${errorData.error}`);
@@ -61,7 +60,7 @@ const ManageCategory = () => {
     setEditMode(true);
     setEditFormData({
       id: category.id,
-      name: category.name,
+      code: category.code,
       category: category.category,
       img: category.img,
     });
@@ -72,11 +71,11 @@ const ManageCategory = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`/api/sub?id=${encodeURIComponent(editFormData.id)}`, {
+      const res = await fetch(`/api/color?id=${encodeURIComponent(editFormData.id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: editFormData.name,
+          code: editFormData.code,
           category: editFormData.category,
           img: img,
         }),
@@ -84,7 +83,7 @@ const ManageCategory = () => {
 
       if (res.ok) {
         window.location.reload();
-        setEditFormData({ id: '', name: '', category: '', img: [] });
+        setEditFormData({ id: '', code: '', category: '', img: [] });
         setEditMode(false);
       } else {
         const errorData = await res.json();
@@ -99,12 +98,12 @@ const ManageCategory = () => {
   const handleDelete = async (id) => {
     if (confirm(`Are you sure you want to delete this?`)) {
       try {
-        const res = await fetch(`/api/sub?id=${encodeURIComponent(id)}`, {
+        const res = await fetch(`/api/color?id=${encodeURIComponent(id)}`, {
           method: 'DELETE',
         });
         if (res.ok) {
           setMessage('Deleted successfully!');
-          window.location.href = '/sub';
+          window.location.href = '/color';
         } else {
           const errorData = await res.json();
           setMessage(`Error: ${errorData.error}`);
@@ -130,18 +129,18 @@ const ManageCategory = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{editMode ? 'Edit Subcategory' : 'Add Subcategory'}</h1>
+      <h1 className="text-2xl font-bold mb-4">{editMode ? 'Edit' : 'Add'}</h1>
       <form onSubmit={editMode ? handleEditSubmit : handleSubmit} className="space-y-4">
         <div>
-          <label className="block mb-1">Name</label>
+          <label className="block mb-1">Code</label>
           <input
             type="text"
             className="border p-2 w-full"
-            value={editMode ? editFormData.name : formData.name}
+            value={editMode ? editFormData.code : formData.code}
             onChange={(e) =>
               editMode
-                ? setEditFormData({ ...editFormData, name: e.target.value })
-                : setFormData({ ...formData, name: e.target.value })
+                ? setEditFormData({ ...editFormData, code: e.target.value })
+                : setFormData({ ...formData, code: e.target.value })
             }
             required
           />
@@ -175,11 +174,11 @@ const ManageCategory = () => {
 
       {message && <p className="mt-4 text-green-600">{message}</p>}
 
-      <h2 className="text-xl font-bold mt-8">All Subcategories</h2>
+      <h2 className="text-xl font-bold mt-8">All</h2>
       <table className="table-auto border-collapse border border-gray-300 w-full mt-4">
         <thead>
           <tr>
-            <th className="border border-gray-300 p-2">Name</th>
+            <th className="border border-gray-300 p-2">Code</th>
             <th className="border border-gray-300 p-2">Category</th>
             <th className="border border-gray-300 p-2">Image</th>
             <th className="border border-gray-300 p-2">Actions</th>
@@ -192,7 +191,7 @@ const ManageCategory = () => {
               const isVideo = /\.(mp4|webm|ogg)$/i.test(fileUrl);
               return (
                 <tr key={category.id}>
-                  <td className="border border-gray-300 p-2">{category.name}</td>
+                  <td className="border border-gray-300 p-2">{category.code}</td>
                   <td className="border border-gray-300 p-2">
                     {isVideo ? (
                       <video controls className="w-24 h-auto">
@@ -223,7 +222,7 @@ const ManageCategory = () => {
           ) : (
             <tr>
               <td colSpan={3} className="border border-gray-300 p-2 text-center">
-                No categories found.
+                No data found.
               </td>
             </tr>
           )}

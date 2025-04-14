@@ -22,8 +22,8 @@ const Upload = ({ onFilesUpload }) => {
       // Determine the upload endpoint based on file type
       const isVideo = file.type.startsWith("video/");
       const uploadUrl = isVideo
-        ? "https://api.cloudinary.com/v1_1/dxlfxsimy/video/upload"
-        : "https://api.cloudinary.com/v1_1/dxlfxsimy/image/upload";
+        ? "https://api.cloudinary.com/v1_1/dqzzfskhw/video/upload"
+        : "https://api.cloudinary.com/v1_1/dqzzfskhw/image/upload";
 
       try {
         const res = await fetch(uploadUrl, {
@@ -50,7 +50,7 @@ const Upload = ({ onFilesUpload }) => {
 
   return (
     <div className="mb-4">
-      <label className="block mb-1 font-bold">Upload Images or Videos</label>
+      <label className="block mb-1 font-bold">Upload Images</label>
       <input type="file" multiple accept="image/*,video/*" onChange={handleFilesChange} className="border p-2 w-full" />
       {loading && <p>Uploading...</p>}
       <div className="mt-2 flex flex-wrap gap-2">

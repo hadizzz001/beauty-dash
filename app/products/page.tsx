@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
@@ -11,7 +11,7 @@ export default function AddProduct() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [discount, setdiscount] = useState('');
+  const [discount, setDiscount] = useState('');
   const [stock, setStock] = useState('');
   const [img, setImg] = useState(['']);
   const [categoryOptions, setCategoryOptions] = useState([]);
@@ -20,52 +20,64 @@ export default function AddProduct() {
   const [filteredSubCategories, setFilteredSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [isNewArrival, setIsNewArrival] = useState(false);
+  const [productType, setProductType] = useState('single');
+  const [colorQtyList, setColorQtyList] = useState([{ color: '', qty: '' }]);
+  const [sizeList, setSizeList] = useState(['']);
+  const [allColors, setAllColors] = useState([]);
+  const [filteredColors, setFilteredColors] = useState([]);
 
   // Fetch categories
   useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const res = await fetch('/api/category');
-        if (res.ok) {
-          const data = await res.json();
-          setCategoryOptions(data);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    }
-    fetchCategories();
+    fetch('/api/category')
+      .then((res) => res.json())
+      .then(setCategoryOptions)
+      .catch(console.error);
   }, []);
 
-  // Fetch all subcategories
+  // Fetch subcategories
   useEffect(() => {
-    async function fetchSubCategories() {
-      try {
-        const res = await fetch('/api/sub');
-        if (res.ok) {
-          const data = await res.json();
-          setAllSubCategories(data);
-        }
-      } catch (error) {
-        console.error('Error fetching subcategories:', error);
-      }
-    }
-    fetchSubCategories();
+    fetch('/api/sub')
+      .then((res) => res.json())
+      .then(setAllSubCategories)
+      .catch(console.error);
   }, []);
 
-  // Filter subcategories based on selected category
+  // Filter subcategories
   useEffect(() => {
-    if (selectedCategory) {
-      const filtered = allSubCategories.filter(
-        (sub) => sub.category === selectedCategory
-      );
-      setFilteredSubCategories(filtered);
-      setSelectedSubCategory(''); // reset selection
-    } else {
-      setFilteredSubCategories([]);
-      setSelectedSubCategory('');
-    }
+    const filtered = allSubCategories.filter(
+      (sub) => sub.category === selectedCategory
+    );
+    setFilteredSubCategories(filtered);
+    setSelectedSubCategory('');
   }, [selectedCategory, allSubCategories]);
+
+  // Fetch all colors
+  useEffect(() => {
+    fetch('/api/color')
+      .then((res) => res.json())
+      .then(setAllColors)
+      .catch(console.error);
+  }, []);
+
+  // Filter colors by category
+  useEffect(() => {
+    const filtered = allColors.filter(
+      (color) => color.category === selectedCategory
+    );
+    setFilteredColors(filtered);
+  }, [selectedCategory, allColors]);
+
+  const handleImgChange = (url) => {
+    if (url) setImg(url);
+  };
+
+  const handleAddColorQty = () => {
+    setColorQtyList([...colorQtyList, { color: '', qty: '' }]);
+  };
+
+  const handleAddSize = () => {
+    setSizeList([...sizeList, '']);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,30 +92,28 @@ export default function AddProduct() {
       description,
       price,
       discount,
-      stock,
       img,
       category: selectedCategory,
       subcategory: selectedSubCategory,
-      ...(isNewArrival && { arrival: "yes" })
+      type: productType,
+      sizes: sizeList,
+      ...(productType === 'single'
+        ? { stock }
+        : { colors: colorQtyList }),
+      ...(isNewArrival && { arrival: 'yes' })
     };
 
-    const response = await fetch('/api/products', {
+    const res = await fetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
 
-    if (response.ok) {
+    if (res.ok) {
       alert('Product added successfully!');
       window.location.href = '/dashboard';
     } else {
       alert('Failed to add product');
-    }
-  };
-
-  const handleImgChange = (url) => {
-    if (url) {
-      setImg(url);
     }
   };
 
@@ -120,8 +130,33 @@ export default function AddProduct() {
         required
       />
 
-      {/* Category Dropdown */}
-      <label className="block text-lg font-bold mb-2">Category</label>
+      {/* Product Type */}
+      <div className="mb-4">
+        <label className="font-bold block mb-1">Product Type</label>
+        <label className="mr-4">
+          <input
+            type="radio"
+            value="single"
+            checked={productType === 'single'}
+            onChange={() => setProductType('single')}
+            className="mr-1"
+          />
+          1 Item
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="collection"
+            checked={productType === 'collection'}
+            onChange={() => setProductType('collection')}
+            className="mr-1"
+          />
+          Collection
+        </label>
+      </div>
+
+      {/* Category */}
+      <label className="block font-bold">Category</label>
       <select
         value={selectedCategory}
         onChange={(e) => setSelectedCategory(e.target.value)}
@@ -130,27 +165,22 @@ export default function AddProduct() {
       >
         <option value="" disabled>Select a category</option>
         {categoryOptions.map((cat) => (
-          <option key={cat.id} value={cat.name}>
-            {cat.name}
-          </option>
+          <option key={cat.id} value={cat.name}>{cat.name}</option>
         ))}
       </select>
 
-      {/* Subcategory Dropdown */}
+      {/* Subcategory */}
       {filteredSubCategories.length > 0 && (
         <>
-          <label className="block text-lg font-bold mb-2">Subcategory</label>
+          <label className="block font-bold">Subcategory</label>
           <select
             value={selectedSubCategory}
             onChange={(e) => setSelectedSubCategory(e.target.value)}
             className="w-full border p-2 mb-4"
-            required
           >
             <option value="" disabled>Select a subcategory</option>
             {filteredSubCategories.map((sub) => (
-              <option key={sub.id} value={sub.name}>
-                {sub.name}
-              </option>
+              <option key={sub.id} value={sub.name}>{sub.name}</option>
             ))}
           </select>
         </>
@@ -171,18 +201,90 @@ export default function AddProduct() {
         step="0.01"
         placeholder="Discounted Price"
         value={discount}
-        onChange={(e) => setdiscount(e.target.value)}
+        onChange={(e) => setDiscount(e.target.value)}
         className="w-full border p-2 mb-4"
       />
 
-      <input
-        type="number"
-        placeholder="Stock"
-        value={stock}
-        onChange={(e) => setStock(e.target.value)}
-        className="w-full border p-2 mb-4"
-        required
-      />
+      {/* Stock for single item */}
+      {productType === 'single' && (
+        <input
+          type="number"
+          placeholder="Stock"
+          value={stock}
+          onChange={(e) => setStock(e.target.value)}
+          className="w-full border p-2 mb-4"
+          required
+        />
+      )}
+
+      {/* Color + Qty for collections */}
+      {productType === 'collection' && (
+        <div className="mb-4">
+          <label className="font-bold block">Color & Quantity</label>
+          {colorQtyList.map((item, idx) => (
+            <div key={idx} className="flex gap-2 mb-2">
+              <select
+                value={item.color}
+                onChange={(e) => {
+                  const newList = [...colorQtyList];
+                  newList[idx].color = e.target.value;
+                  setColorQtyList(newList);
+                }}
+                className="border p-2 flex-1"
+              >
+                <option value="">Select Color</option>
+                {filteredColors.map((col) => (
+                  <option key={col.code} value={col.code}>{col.code}</option>
+                ))}
+              </select>
+              <input
+                type="number"
+                placeholder="Qty"
+                value={item.qty}
+                onChange={(e) => {
+                  const newList = [...colorQtyList];
+                  newList[idx].qty = e.target.value;
+                  setColorQtyList(newList);
+                }}
+                className="border p-2 w-24"
+              />
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={handleAddColorQty}
+            className="text-blue-500"
+          >
+            + Add Color
+          </button>
+        </div>
+      )}
+
+      {/* Sizes */}
+      <div className="mb-4">
+        <label className="font-bold block">Sizes</label>
+        {sizeList.map((size, idx) => (
+          <input
+            key={idx}
+            type="text"
+            placeholder={`Size ${idx + 1}`}
+            value={size}
+            onChange={(e) => {
+              const updated = [...sizeList];
+              updated[idx] = e.target.value;
+              setSizeList(updated);
+            }}
+            className="w-full border p-2 mb-2"
+          />
+        ))}
+        <button
+          type="button"
+          onClick={handleAddSize}
+          className="text-blue-500"
+        >
+          + Add Size
+        </button>
+      </div>
 
       <label className="block text-lg font-bold mb-2">Description</label>
       <ReactQuill

@@ -11,10 +11,12 @@ export async function PATCH(request, { params }) {
     price,
     discount,
     img,
-    category, 
-    subcategory, 
+    category,
+    subcategory,
+    colors,
+    sizes,
     stock,
-    arrival 
+    arrival,
      
   } = await request.json();
 
@@ -31,10 +33,12 @@ export async function PATCH(request, { params }) {
         price,
         discount,
         img,
-        category, 
+        category,
         subcategory,
+        colors,
+        sizes,
         stock,
-        arrival 
+        arrival,
          
       },
     });

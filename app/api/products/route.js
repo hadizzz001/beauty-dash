@@ -7,14 +7,16 @@ export async function POST(req) {
     const body = await req.json();
     const {   
       title,
-description,
-price,
-discount,
-img,
-category, 
-subcategory,
-stock,
-arrival 
+      description,
+      price,
+      discount,
+      img,
+      category,
+      subcategory,
+      colors,
+      sizes,
+      stock,
+      arrival,
       } = body;
 
 console.log("body are: ",body);
@@ -28,11 +30,12 @@ console.log("body are: ",body);
         price,
         discount,
         img,
-        category, 
+        category,
         subcategory,
+        colors,
+        sizes,
         stock,
-        arrival 
-          
+        arrival,
       },
     });
 
