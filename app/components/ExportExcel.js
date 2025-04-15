@@ -14,7 +14,7 @@ const ExportToExcel = ({ allTemp }) => {
       order.userInfo.forEach((product) => {
         formattedData.push({
           ReceiptNumber: order.num, // Order Number 
-          Code: order.code, // New field
+          // Code: order.code, // New field
           Email: order.cartItems.email, // New field
           Phone: order.cartItems.phone, // New field
           Delivery$: order.delivery, // New field 

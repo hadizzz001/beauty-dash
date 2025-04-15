@@ -139,6 +139,8 @@ export default function ProductTable() {
   );
 }
 
+ 
+
 function EditProductForm({ product, onCancel, onSave }) {
   const [title, setTitle] = useState(product.title);
   const [price, setPrice] = useState(product.price);
@@ -178,8 +180,9 @@ function EditProductForm({ product, onCancel, onSave }) {
   };
 
   const handleAddColor = () => {
-    if (newColor && newQty) {
-      setColors([...colors, { color: newColor, qty: newQty }]);
+    const selected = allColors.find(c => c.code === newColor);
+    if (selected && newQty) {
+      setColors([...colors, { color: selected.code, img: selected.img?.[0] || '', qty: newQty }]);
       setNewColor('');
       setNewQty('');
     }
@@ -270,6 +273,7 @@ function EditProductForm({ product, onCancel, onSave }) {
           <div className="flex flex-wrap gap-2 mb-2">
             {colors.map((c, i) => (
               <span key={i} className="bg-gray-300 px-2 py-1 rounded flex items-center gap-1">
+                {c.img && <img src={c.img} alt={c.color} className="w-4 h-4 rounded-full" />}
                 {c.color} ({c.qty})
                 <button type="button" onClick={() => handleRemoveColor(c.color)} className="text-red-500 font-bold ml-1">×</button>
               </span>
@@ -305,3 +309,4 @@ function EditProductForm({ product, onCancel, onSave }) {
     </form>
   );
 }
+ 

@@ -54,11 +54,11 @@ export default function Sidebar() {
                 Add Color
               </a>
             </li>  
-            <li>
+            {/* <li>
               <a href="/offer" style={{ color: "white", textDecoration: "none" }}>
                 Add Code
               </a>
-            </li>  
+            </li>   */}
             <li>
               <a href="/reservation" style={{ color: "white", textDecoration: "none" }}>
                 Orders

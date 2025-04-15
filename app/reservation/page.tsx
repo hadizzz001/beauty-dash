@@ -183,8 +183,8 @@ const page = () => {
           <th scope="col">Image</th>
           <th scope="col">Client Name</th>
           <th scope="col">Total Amount</th>
-          <th scope="col">Total Items</th>
-          <th scope="col">Code</th>
+          {/* <th scope="col">Total Items</th> */}
+          {/* <th scope="col">Code</th> */}
           <th scope="col">Date</th>
           <th scope="col">Action</th>
         </tr>
@@ -221,14 +221,14 @@ const page = () => {
               </td>
               <td>{post.cartItems.fname}</td>
               <td>{post.total}</td>
-              <td>
+              {/* <td>
                 {post.userInfo?.reduce(
                   (acc, item) =>
                     acc + (isNaN(item.quantity) ? 0 : Number(item.quantity)),
                   0
                 )}
               </td>
-              <td>{post.code}</td>
+              <td>{post.code}</td> */}
               <td>{post.date}</td>
               <td className="flex space-x-2">
                 <Link

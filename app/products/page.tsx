@@ -21,7 +21,7 @@ export default function AddProduct() {
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [isNewArrival, setIsNewArrival] = useState(false);
   const [productType, setProductType] = useState('single');
-  const [colorQtyList, setColorQtyList] = useState([{ color: '', qty: '' }]);
+  const [colorQtyList, setColorQtyList] = useState([{ code: '', qty: '', img: [] }]);
   const [sizeList, setSizeList] = useState(['']);
   const [allColors, setAllColors] = useState([]);
   const [filteredColors, setFilteredColors] = useState([]);
@@ -33,6 +33,12 @@ export default function AddProduct() {
       .then(setCategoryOptions)
       .catch(console.error);
   }, []);
+
+
+  useEffect(() => {
+console.log("colorQtyList", colorQtyList);
+
+  }, [colorQtyList]);
 
   // Fetch subcategories
   useEffect(() => {
@@ -72,7 +78,7 @@ export default function AddProduct() {
   };
 
   const handleAddColorQty = () => {
-    setColorQtyList([...colorQtyList, { color: '', qty: '' }]);
+    setColorQtyList([...colorQtyList, { code: '', qty: '', img: [] }]);
   };
 
   const handleAddSize = () => {
@@ -223,20 +229,25 @@ export default function AddProduct() {
           <label className="font-bold block">Color & Quantity</label>
           {colorQtyList.map((item, idx) => (
             <div key={idx} className="flex gap-2 mb-2">
-              <select
-                value={item.color}
-                onChange={(e) => {
-                  const newList = [...colorQtyList];
-                  newList[idx].color = e.target.value;
-                  setColorQtyList(newList);
-                }}
-                className="border p-2 flex-1"
-              >
-                <option value="">Select Color</option>
-                {filteredColors.map((col) => (
-                  <option key={col.code} value={col.code}>{col.code}</option>
-                ))}
-              </select>
+<select
+  value={item.code}
+  onChange={(e) => {
+    const selectedCode = e.target.value;
+    const selectedColor = filteredColors.find(c => c.code === selectedCode);
+
+    const newList = [...colorQtyList];
+    newList[idx].code = selectedCode;
+    newList[idx].img = selectedColor ? [selectedColor.img] : []; // use the actual color img
+    setColorQtyList(newList);
+  }}
+  className="border p-2 flex-1"
+>
+  <option value="">Select Color</option>
+  {filteredColors.map((col) => (
+    <option key={col.code} value={col.code}>{col.code}</option>
+  ))}
+</select>
+
               <input
                 type="number"
                 placeholder="Qty"

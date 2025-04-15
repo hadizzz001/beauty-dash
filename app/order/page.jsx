@@ -179,21 +179,21 @@ const page = () => {
                     <span>{allTemp1.cartItems.address}</span>
                 </div>
                 <hr className="my-2" />
-                <div className="flex justify-between mb-2">
+                {/* <div className="flex justify-between mb-2">
                     <span className="font-semibold">Total Items</span>
                     <span className="font-semibold">{finalTotal.totalItems}</span>
-                </div>
-                <div className="flex justify-between mb-2">
+                </div> */}
+                {/* <div className="flex justify-between mb-2">
                     <span className="font-semibold">Code</span>
                     <span className="font-semibold">{allTemp1.code}</span>
-                </div>
+                </div> */}
                 <div className="flex justify-between mb-2">
                     <span className="font-semibold">Delivery Amount</span>
-                    <span className="font-semibold">{allTemp1.delivery} {allTemp1.cur}</span>
+                    <span className="font-semibold">{allTemp1.delivery}</span>
                 </div> 
                 <div className="flex justify-between mb-2">
                     <span className="font-semibold">Total Amount</span>
-                    <span className="font-semibold">{allTemp1.total} {allTemp1.cur}</span>
+                    <span className="font-semibold">{allTemp1.total}</span>
                 </div> 
                 <div className="mt-4"> 
                 <textarea 
