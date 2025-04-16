@@ -243,15 +243,7 @@ const page = () => {
                 >
                   Delete
                 </button>
-                <button
-                  className={`p-2 w-20 h-10 ${
-                    post.paid ? "bg-blue-500 text-white" : "bg-black text-white"
-                  }`}
-                  onClick={() => !post.paid && handlePaymentUpdate(post.id)}
-                  disabled={post.paid}
-                >
-                  {post.paid ? "Paid" : "Unpaid"}
-                </button>
+ 
               </td>
             </tr>
           ))

@@ -47,7 +47,6 @@ model Order {
   cartItems Json
   total     String
   delivery  String
-  code      String?
   paid      Boolean @default(false)
   num       String?
   remark    String?
@@ -58,7 +57,7 @@ model Review {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  stars String
+  stars       String
   date        DateTime @default(now()) @db.Date
 }
 

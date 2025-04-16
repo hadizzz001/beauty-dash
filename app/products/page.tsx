@@ -237,7 +237,7 @@ console.log("colorQtyList", colorQtyList);
 
     const newList = [...colorQtyList];
     newList[idx].code = selectedCode;
-    newList[idx].img = selectedColor ? [selectedColor.img] : []; // use the actual color img
+    newList[idx].img = selectedColor?.img?.flat() || []; // flatten to string[]
     setColorQtyList(newList);
   }}
   className="border p-2 flex-1"
@@ -247,6 +247,7 @@ console.log("colorQtyList", colorQtyList);
     <option key={col.code} value={col.code}>{col.code}</option>
   ))}
 </select>
+
 
               <input
                 type="number"

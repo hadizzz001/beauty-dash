@@ -182,11 +182,19 @@ function EditProductForm({ product, onCancel, onSave }) {
   const handleAddColor = () => {
     const selected = allColors.find(c => c.code === newColor);
     if (selected && newQty) {
-      setColors([...colors, { color: selected.code, img: selected.img?.[0] || '', qty: newQty }]);
+      setColors([
+        ...colors,
+        {
+          color: selected.code,
+          img: selected.img && Array.isArray(selected.img) ? selected.img : [selected.img || ''],
+          qty: newQty
+        }
+      ]);
       setNewColor('');
       setNewQty('');
     }
   };
+  
 
   const handleRemoveColor = (clr) => {
     setColors(colors.filter(c => c.color !== clr));
@@ -273,7 +281,10 @@ function EditProductForm({ product, onCancel, onSave }) {
           <div className="flex flex-wrap gap-2 mb-2">
             {colors.map((c, i) => (
               <span key={i} className="bg-gray-300 px-2 py-1 rounded flex items-center gap-1">
-                {c.img && <img src={c.img} alt={c.color} className="w-4 h-4 rounded-full" />}
+               {Array.isArray(c.img) && c.img[0] && (
+  <img src={c.img[0]} alt={c.color} className="w-4 h-4 rounded-full" />
+)}
+
                 {c.color} ({c.qty})
                 <button type="button" onClick={() => handleRemoveColor(c.color)} className="text-red-500 font-bold ml-1">×</button>
               </span>
@@ -308,5 +319,4 @@ function EditProductForm({ product, onCancel, onSave }) {
       </div>
     </form>
   );
-}
- 
+} 

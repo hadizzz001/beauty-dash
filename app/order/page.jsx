@@ -130,13 +130,13 @@ const page = () => {
                                                                 <span className="font-semibold">{temp.title}</span>
                                                             </div>
                                                         </td>
-                                                        <td className="py-4">{temp.discount * allTemp1.rate} {allTemp1.cur}</td>
+                                                        <td className="py-4">${temp.discount } </td>
                                                         <td className="py-4">
                                                             <div className="flex items-center">
                                                                 <span className="text-center w-8">{temp.quantity}</span>
                                                             </div>
                                                         </td>
-                                                        <td className="py-4">{(temp.discount * allTemp1.rate) * temp.quantity} {allTemp1.cur}</td>
+                                                        <td className="py-4">${(temp.discount ) * temp.quantity} </td>
 
 
 
