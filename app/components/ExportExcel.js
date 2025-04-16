@@ -18,7 +18,7 @@ const ExportToExcel = ({ allTemp }) => {
           Email: order.cartItems.email, // New field
           Phone: order.cartItems.phone, // New field
           Delivery$: order.delivery, // New field 
-          Paid: order.paid, // Paid status (true/false)
+          // Paid: order.paid, 
           Product: product.title,
           UnitPrice$: product.discount,
           Quantity: product.quantity,

@@ -1,9 +1,7 @@
 
-"use client"
-import Link from "next/link";
+"use client" 
 import ExportButton from "../components/ExportExcel";
-import { useState, useEffect } from "react";
-import { redirect, useRouter } from 'next/navigation';
+import { useState, useEffect } from "react"; 
 
 
 
@@ -231,18 +229,18 @@ const page = () => {
               <td>{post.code}</td> */}
               <td>{post.date}</td>
               <td className="flex space-x-2">
-                <Link
+                <a
                   className="text-blue-700 bg-black p-2 w-20 h-10 flex items-center justify-center"
                   href={`/order?id=${post.id}`}
                 >
                   View
-                </Link>
-                <button
+                </a>
+                {/* <button
                   onClick={() => handleDeleteOrder(post.id)}
                   className="bg-red-500 text-white p-2 w-20 h-10"
                 >
                   Delete
-                </button>
+                </button> */}
  
               </td>
             </tr>

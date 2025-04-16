@@ -185,7 +185,7 @@ function EditProductForm({ product, onCancel, onSave }) {
       setColors([
         ...colors,
         {
-          color: selected.code,
+          code: selected.code,
           img: selected.img && Array.isArray(selected.img) ? selected.img : [selected.img || ''],
           qty: newQty
         }
@@ -282,11 +282,11 @@ function EditProductForm({ product, onCancel, onSave }) {
             {colors.map((c, i) => (
               <span key={i} className="bg-gray-300 px-2 py-1 rounded flex items-center gap-1">
                {Array.isArray(c.img) && c.img[0] && (
-  <img src={c.img[0]} alt={c.color} className="w-4 h-4 rounded-full" />
+  <img src={c.img[0]} alt={c.code} className="w-4 h-4 rounded-full" />
 )}
 
-                {c.color} ({c.qty})
-                <button type="button" onClick={() => handleRemoveColor(c.color)} className="text-red-500 font-bold ml-1">×</button>
+                {c.code} ({c.qty})
+                <button type="button" onClick={() => handleRemoveColor(c.code)} className="text-red-500 font-bold ml-1">×</button>
               </span>
             ))}
           </div>
