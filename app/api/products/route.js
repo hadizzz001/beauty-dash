@@ -17,6 +17,8 @@ export async function POST(req) {
       sizes,
       stock,
       arrival,
+      vid,
+      delivery,
       } = body;
 
 console.log("body are: ",body);
@@ -36,6 +38,8 @@ console.log("body are: ",body);
         sizes,
         stock,
         arrival,
+        vid,
+        delivery,
       },
     });
 

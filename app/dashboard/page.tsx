@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Upload from '../components/Upload';
+import Upload1 from '../components/Upload1';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 
@@ -106,7 +107,7 @@ export default function ProductTable() {
             <th className="border p-2">Stock</th>
             <th className="border p-2">Category</th>
             <th className="border p-2">Subcategory</th>
-            <th className="border p-2">Arrival</th>
+            <th className="border p-2">Best Seller</th>
             <th className="border p-2">Actions</th>
           </tr>
         </thead>
@@ -141,6 +142,8 @@ export default function ProductTable() {
 
  
 
+ 
+
 function EditProductForm({ product, onCancel, onSave }) {
   const [title, setTitle] = useState(product.title);
   const [price, setPrice] = useState(product.price);
@@ -148,6 +151,8 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [stock, setStock] = useState(product.stock || '');
   const [description, setDescription] = useState(product.description);
   const [img, setImg] = useState(product.img);
+  const [video, setVideo] = useState(product.video || []);
+  const [delivery, setDelivery] = useState(product.delivery || '');
   const [category, setCategory] = useState(product.category || '');
   const [subcategory, setSubcategory] = useState(product.subcategory || '');
   const [arrival, setArrival] = useState(product.arrival === 'yes');
@@ -176,7 +181,7 @@ function EditProductForm({ product, onCancel, onSave }) {
 
   const handleCategoryChange = (val) => {
     setCategory(val);
-    setColors([]); // reset colors when changing category
+    setColors([]);
   };
 
   const handleAddColor = () => {
@@ -194,10 +199,9 @@ function EditProductForm({ product, onCancel, onSave }) {
       setNewQty('');
     }
   };
-  
 
   const handleRemoveColor = (clr) => {
-    setColors(colors.filter(c => c.color !== clr));
+    setColors(colors.filter(c => c.code !== clr));
   };
 
   const handleAddSize = () => setSizes([...sizes, '']);
@@ -224,6 +228,8 @@ function EditProductForm({ product, onCancel, onSave }) {
       discount,
       stock: mode === '1' ? stock : null,
       img,
+      video,
+      delivery,
       description,
       category,
       subcategory,
@@ -253,12 +259,22 @@ function EditProductForm({ product, onCancel, onSave }) {
         {categories.map((cat) => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
       </select>
 
-      {category && (
-        <select className="w-full p-2 border mb-2" value={subcategory} onChange={(e) => setSubcategory(e.target.value)} required>
-          <option value="">Select Subcategory</option>
-          {filteredSub.map((sub) => <option key={sub.id} value={sub.name}>{sub.name}</option>)}
-        </select>
-      )}
+      {category && filteredSub.length > 0 && (
+  <select
+    className="w-full p-2 border mb-2"
+    value={subcategory}
+    onChange={(e) => setSubcategory(e.target.value)}
+    required
+  >
+    <option value="">Select Subcategory</option>
+    {filteredSub.map((sub) => (
+      <option key={sub.id} value={sub.name}>
+        {sub.name}
+      </option>
+    ))}
+  </select>
+)}
+
 
       <input className="w-full p-2 border mb-2" type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price" />
       <input className="w-full p-2 border mb-2" type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="Discount" />
@@ -270,10 +286,13 @@ function EditProductForm({ product, onCancel, onSave }) {
       <ReactQuill value={description} onChange={setDescription} className="mb-4" theme="snow" />
 
       <div className="mb-4">
-        <label><input type="checkbox" checked={arrival} onChange={(e) => setArrival(e.target.checked)} /> New Arrival</label>
+        <label><input type="checkbox" checked={arrival} onChange={(e) => setArrival(e.target.checked)} /> Best Seller</label>
       </div>
 
-      <Upload onFilesUpload={(url) => setImg(url)} />
+      <Upload onImagesUpload={(url) => setImg(url)} />
+      <Upload1 onFilesUpload={(url) => setVideo(url)} />
+
+      <input className="w-full p-2 border my-4" value={delivery} onChange={(e) => setDelivery(e.target.value)} placeholder="Delivery Info" />
 
       {mode === 'collection' && (
         <>
@@ -281,10 +300,9 @@ function EditProductForm({ product, onCancel, onSave }) {
           <div className="flex flex-wrap gap-2 mb-2">
             {colors.map((c, i) => (
               <span key={i} className="bg-gray-300 px-2 py-1 rounded flex items-center gap-1">
-               {Array.isArray(c.img) && c.img[0] && (
-  <img src={c.img[0]} alt={c.code} className="w-4 h-4 rounded-full" />
-)}
-
+                {Array.isArray(c.img) && c.img[0] && (
+                  <img src={c.img[0]} alt={c.code} className="w-4 h-4 rounded-full" />
+                )}
                 {c.code} ({c.qty})
                 <button type="button" onClick={() => handleRemoveColor(c.code)} className="text-red-500 font-bold ml-1">×</button>
               </span>
@@ -319,4 +337,4 @@ function EditProductForm({ product, onCancel, onSave }) {
       </div>
     </form>
   );
-} 
+}

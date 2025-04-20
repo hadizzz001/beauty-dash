@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import Upload from '../components/Upload';
+import Upload1 from '../components/Upload1'; // For videos
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -14,6 +15,8 @@ export default function AddProduct() {
   const [discount, setDiscount] = useState('');
   const [stock, setStock] = useState('');
   const [img, setImg] = useState(['']);
+  const [video, setVideo] = useState(['']);
+  const [delivery, setDelivery] = useState('');
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [allSubCategories, setAllSubCategories] = useState([]);
@@ -26,7 +29,6 @@ export default function AddProduct() {
   const [allColors, setAllColors] = useState([]);
   const [filteredColors, setFilteredColors] = useState([]);
 
-  // Fetch categories
   useEffect(() => {
     fetch('/api/category')
       .then((res) => res.json())
@@ -34,13 +36,6 @@ export default function AddProduct() {
       .catch(console.error);
   }, []);
 
-
-  useEffect(() => {
-console.log("colorQtyList", colorQtyList);
-
-  }, [colorQtyList]);
-
-  // Fetch subcategories
   useEffect(() => {
     fetch('/api/sub')
       .then((res) => res.json())
@@ -48,7 +43,6 @@ console.log("colorQtyList", colorQtyList);
       .catch(console.error);
   }, []);
 
-  // Filter subcategories
   useEffect(() => {
     const filtered = allSubCategories.filter(
       (sub) => sub.category === selectedCategory
@@ -57,7 +51,6 @@ console.log("colorQtyList", colorQtyList);
     setSelectedSubCategory('');
   }, [selectedCategory, allSubCategories]);
 
-  // Fetch all colors
   useEffect(() => {
     fetch('/api/color')
       .then((res) => res.json())
@@ -65,7 +58,6 @@ console.log("colorQtyList", colorQtyList);
       .catch(console.error);
   }, []);
 
-  // Filter colors by category
   useEffect(() => {
     const filtered = allColors.filter(
       (color) => color.category === selectedCategory
@@ -75,6 +67,10 @@ console.log("colorQtyList", colorQtyList);
 
   const handleImgChange = (url) => {
     if (url) setImg(url);
+  };
+
+  const handleVideoChange = (url) => {
+    if (url) setVideo(url);
   };
 
   const handleAddColorQty = () => {
@@ -99,14 +95,14 @@ console.log("colorQtyList", colorQtyList);
       price,
       discount,
       img,
+      video,
+      delivery: delivery+"",
       category: selectedCategory,
       subcategory: selectedSubCategory,
       type: productType,
       sizes: sizeList,
-      ...(productType === 'single'
-        ? { stock }
-        : { colors: colorQtyList }),
-      ...(isNewArrival && { arrival: 'yes' })
+      ...(productType === 'single' ? { stock } : { colors: colorQtyList }),
+      ...(isNewArrival && { arrival: 'yes' }),
     };
 
     const res = await fetch('/api/products', {
@@ -211,7 +207,15 @@ console.log("colorQtyList", colorQtyList);
         className="w-full border p-2 mb-4"
       />
 
-      {/* Stock for single item */}
+      <input
+        type="number"
+        placeholder="Delivery (in days)"
+        value={delivery}
+        onChange={(e) => setDelivery(e.target.value)}
+        className="w-full border p-2 mb-4"
+        required
+      />
+
       {productType === 'single' && (
         <input
           type="number"
@@ -223,31 +227,29 @@ console.log("colorQtyList", colorQtyList);
         />
       )}
 
-      {/* Color + Qty for collections */}
+      {/* Color & Quantity for collection */}
       {productType === 'collection' && (
         <div className="mb-4">
           <label className="font-bold block">Color & Quantity</label>
           {colorQtyList.map((item, idx) => (
             <div key={idx} className="flex gap-2 mb-2">
-<select
-  value={item.code}
-  onChange={(e) => {
-    const selectedCode = e.target.value;
-    const selectedColor = filteredColors.find(c => c.code === selectedCode);
-
-    const newList = [...colorQtyList];
-    newList[idx].code = selectedCode;
-    newList[idx].img = selectedColor?.img?.flat() || []; // flatten to string[]
-    setColorQtyList(newList);
-  }}
-  className="border p-2 flex-1"
->
-  <option value="">Select Color</option>
-  {filteredColors.map((col) => (
-    <option key={col.code} value={col.code}>{col.code}</option>
-  ))}
-</select>
-
+              <select
+                value={item.code}
+                onChange={(e) => {
+                  const selectedCode = e.target.value;
+                  const selectedColor = filteredColors.find(c => c.code === selectedCode);
+                  const newList = [...colorQtyList];
+                  newList[idx].code = selectedCode;
+                  newList[idx].img = selectedColor?.img?.flat() || [];
+                  setColorQtyList(newList);
+                }}
+                className="border p-2 flex-1"
+              >
+                <option value="">Select Color</option>
+                {filteredColors.map((col) => (
+                  <option key={col.code} value={col.code}>{col.code}</option>
+                ))}
+              </select>
 
               <input
                 type="number"
@@ -307,7 +309,9 @@ console.log("colorQtyList", colorQtyList);
         placeholder="Write your product description here..."
       />
 
-      <Upload onFilesUpload={handleImgChange} />
+      <Upload onImagesUpload={handleImgChange} />
+
+      <Upload1 onFilesUpload={handleVideoChange} />
 
       <div className="flex items-center my-4">
         <input
@@ -317,7 +321,7 @@ console.log("colorQtyList", colorQtyList);
           onChange={(e) => setIsNewArrival(e.target.checked)}
           className="mr-2"
         />
-        <label htmlFor="newArrival" className="text-lg font-bold">New Arrival</label>
+        <label htmlFor="newArrival" className="text-lg font-bold">Best Seller</label>
       </div>
 
       <button type="submit" className="bg-green-500 text-white px-4 py-2">
