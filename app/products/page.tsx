@@ -28,6 +28,17 @@ export default function AddProduct() {
   const [sizeList, setSizeList] = useState(['']);
   const [allColors, setAllColors] = useState([]);
   const [filteredColors, setFilteredColors] = useState([]);
+  const [brands, setBrands] = useState([]);
+const [selectedBrand, setSelectedBrand] = useState('');
+
+
+useEffect(() => {
+  fetch('/api/brand')
+    .then((res) => res.json())
+    .then(setBrands)
+    .catch(console.error);
+}, []);
+
 
   useEffect(() => {
     fetch('/api/category')
@@ -100,6 +111,7 @@ export default function AddProduct() {
       category: selectedCategory,
       subcategory: selectedSubCategory,
       type: productType,
+      brand: selectedBrand,
       sizes: sizeList,
       ...(productType === 'single' ? { stock } : { colors: colorQtyList }),
       ...(isNewArrival && { arrival: 'yes' }),
@@ -188,6 +200,21 @@ export default function AddProduct() {
         </>
       )}
 
+
+<label className="block font-bold">Brand</label>
+<select
+  value={selectedBrand}
+  onChange={(e) => setSelectedBrand(e.target.value)}
+  className="w-full border p-2 mb-4"
+  required
+>
+  <option value="" disabled>Select a brand</option>
+  {brands.map((b, i) => (
+    <option key={i} value={b.name}>{b.name}</option>
+  ))}
+</select>
+
+
       <input
         type="number"
         step="0.01"
@@ -209,7 +236,7 @@ export default function AddProduct() {
 
       <input
         type="number"
-        placeholder="Delivery (in days)"
+        placeholder="Delivery price"
         value={delivery}
         onChange={(e) => setDelivery(e.target.value)}
         className="w-full border p-2 mb-4"

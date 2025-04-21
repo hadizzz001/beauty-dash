@@ -164,17 +164,22 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [allColors, setAllColors] = useState([]);
   const [newColor, setNewColor] = useState('');
   const [newQty, setNewQty] = useState('');
+  const [brand, setBrand] = useState(product.brand || '');
+const [brands, setBrands] = useState([]);
+
 
   useEffect(() => {
     const fetchAll = async () => {
-      const [cat, sub, col] = await Promise.all([
+      const [cat, sub, col, br] = await Promise.all([
         fetch('/api/category').then(res => res.json()),
         fetch('/api/sub').then(res => res.json()),
-        fetch('/api/color').then(res => res.json())
+        fetch('/api/color').then(res => res.json()),
+        fetch('/api/brand').then(res => res.json())
       ]);
       setCategories(cat);
       setSubcategories(sub);
       setAllColors(col);
+      setBrands(br);
     };
     fetchAll();
   }, []);
@@ -235,7 +240,8 @@ function EditProductForm({ product, onCancel, onSave }) {
       subcategory,
       arrival: arrival ? 'yes' : 'no',
       colors: mode === 'collection' ? colors : [],
-      sizes
+      sizes,
+      brand,
     };
     onSave(payload);
   };
@@ -274,6 +280,22 @@ function EditProductForm({ product, onCancel, onSave }) {
     ))}
   </select>
 )}
+
+
+<select
+  className="w-full p-2 border mb-2"
+  value={brand}
+  onChange={(e) => setBrand(e.target.value)}
+  required
+>
+  <option value="">Select Brand</option>
+  {brands.map((b) => (
+    <option key={b.id} value={b.name}>
+      {b.name}
+    </option>
+  ))}
+</select>
+
 
 
       <input className="w-full p-2 border mb-2" type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price" />

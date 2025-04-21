@@ -16,14 +16,20 @@ model Product {
   img         String[]
   category    String
   subcategory String?
+  brand       String?
   colors      Json?
   sizes       Json?
   stock       String?
   delivery    String
-  video         String[]
+  video       String[]
   arrival     String   @default("no")
 }
 
+model Brand {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  name String   @unique
+  img  String[]
+}
 model Category {
   id   String   @id @default(auto()) @map("_id") @db.ObjectId
   name String   @unique

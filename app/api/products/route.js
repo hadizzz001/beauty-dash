@@ -19,6 +19,7 @@ export async function POST(req) {
       arrival,
       vid,
       delivery,
+      brand,
       } = body;
 
 console.log("body are: ",body);
@@ -40,6 +41,7 @@ console.log("body are: ",body);
         arrival,
         vid,
         delivery,
+        brand,
       },
     });
 

@@ -19,6 +19,7 @@ export async function PATCH(request, { params }) {
     arrival,
     vid,
     delivery,
+    brand,
      
   } = await request.json();
 
@@ -43,6 +44,7 @@ export async function PATCH(request, { params }) {
         arrival,
         vid,
         delivery,
+        brand,
          
       },
     });
