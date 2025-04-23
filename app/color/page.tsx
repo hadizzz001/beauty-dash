@@ -166,7 +166,7 @@ const ManageCategory = () => {
             ))}
           </select>
         </div>
-        <Upload onFilesUpload={handleImgChange} />
+        <Upload onImagesUpload={handleImgChange} />
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
           {editMode ? 'Update' : 'Add'}
         </button>
@@ -192,6 +192,7 @@ const ManageCategory = () => {
               return (
                 <tr key={category.id}>
                   <td className="border border-gray-300 p-2">{category.code}</td>
+                  <td className="border border-gray-300 p-2">{category.category}</td>
                   <td className="border border-gray-300 p-2">
                     {isVideo ? (
                       <video controls className="w-24 h-auto">
