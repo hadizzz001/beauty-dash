@@ -20,6 +20,7 @@ export async function POST(req) {
       vid,
       delivery,
       brand,
+      points,
       } = body;
 
 console.log("body are: ",body);
@@ -42,6 +43,7 @@ console.log("body are: ",body);
         vid,
         delivery,
         brand,
+        points,
       },
     });
 

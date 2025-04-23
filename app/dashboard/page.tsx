@@ -147,6 +147,7 @@ export default function ProductTable() {
 function EditProductForm({ product, onCancel, onSave }) {
   const [title, setTitle] = useState(product.title);
   const [price, setPrice] = useState(product.price);
+  const [points, setPts] = useState(product.points);
   const [discount, setDiscount] = useState(product.discount || '');
   const [stock, setStock] = useState(product.stock || '');
   const [description, setDescription] = useState(product.description);
@@ -230,6 +231,7 @@ const [brands, setBrands] = useState([]);
       ...product,
       title,
       price,
+      points,
       discount,
       stock: mode === '1' ? stock : null,
       img,
@@ -298,6 +300,7 @@ const [brands, setBrands] = useState([]);
 
 
 
+      <input className="w-full p-2 border mb-2" type="number" value={points} onChange={(e) => setPts(e.target.value)} placeholder="Points" />
       <input className="w-full p-2 border mb-2" type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price" />
       <input className="w-full p-2 border mb-2" type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="Discount" />
 

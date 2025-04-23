@@ -12,6 +12,7 @@ export default function AddProduct() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [points, setPts] = useState('');
   const [discount, setDiscount] = useState('');
   const [stock, setStock] = useState('');
   const [img, setImg] = useState(['']);
@@ -55,7 +56,7 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    const filtered = allSubCategories.filter(
+    const filtered = allSubCategories?.filter(
       (sub) => sub.category === selectedCategory
     );
     setFilteredSubCategories(filtered);
@@ -104,6 +105,7 @@ useEffect(() => {
       title,
       description,
       price,
+      points,
       discount,
       img,
       video,
@@ -241,6 +243,14 @@ useEffect(() => {
         onChange={(e) => setDelivery(e.target.value)}
         className="w-full border p-2 mb-4"
         required
+      />
+
+      <input
+        type="number"
+        placeholder="Points"
+        value={points}
+        onChange={(e) => setPts(e.target.value)}
+        className="w-full border p-2 mb-4" 
       />
 
       {productType === 'single' && (

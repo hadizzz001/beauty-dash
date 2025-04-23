@@ -20,6 +20,7 @@ model Product {
   colors      Json?
   sizes       Json?
   stock       String?
+  points       String?
   delivery    String
   video       String[]
   arrival     String   @default("no")
