@@ -197,13 +197,17 @@ const page = () => {
                 </div> 
                 <div className="flex justify-between mb-2">
                     <span className="font-semibold">Total Amount</span>
-                    <span className="font-semibold">{allTemp1.total}</span>
+                    <span className="font-semibold">${allTemp1.total}</span>
+                </div> 
+                <div className="flex justify-between mb-2">
+                    <span className="font-semibold">Note:</span>
+                    <span className="font-semibold">{allTemp1?.note}</span> 
                 </div> 
                 <div className="mt-4"> 
                 <textarea 
                       value={updatedNums[allTemp1.id] || allTemp1.remark || ""}
                       onChange={(e) => handleInputChange(allTemp1.id, e.target.value)}
-                      placeholder="Enter remark"
+                      placeholder="Enter your remark"
                       className="border p-1"
                     /><br/>
                     <button
