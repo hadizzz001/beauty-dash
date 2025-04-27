@@ -117,6 +117,7 @@ const page = () => {
                                             <th className="text-left font-semibold">Price</th>
                                             <th className="text-left font-semibold">Color</th>
                                             <th className="text-left font-semibold">Size</th>
+                                            <th className="text-left font-semibold">Name</th>
                                             <th className="text-left font-semibold">Quantity</th>
                                             <th className="text-left font-semibold">Total</th>
                                         </tr>
@@ -135,6 +136,7 @@ const page = () => {
                                                         <td className="py-4">${temp.discount } </td>
                                                         <td className="py-4">{temp.selectedColor } </td>
                                                         <td className="py-4">{temp.selectedSize } </td>
+                                                        <td className="py-4">{temp.selectedName } </td>
                                                         <td className="py-4">
                                                             <div className="flex items-center">
                                                                 <span className="text-center w-8">{temp.quantity}</span>

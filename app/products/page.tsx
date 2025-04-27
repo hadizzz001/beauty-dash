@@ -27,18 +27,19 @@ export default function AddProduct() {
   const [productType, setProductType] = useState('single');
   const [colorQtyList, setColorQtyList] = useState([{ code: '', qty: '', img: [] }]);
   const [sizeList, setSizeList] = useState(['']);
+  const [nameList, setNameList] = useState(['']);
   const [allColors, setAllColors] = useState([]);
   const [filteredColors, setFilteredColors] = useState([]);
   const [brands, setBrands] = useState([]);
-const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState('');
 
 
-useEffect(() => {
-  fetch('/api/brand')
-    .then((res) => res.json())
-    .then(setBrands)
-    .catch(console.error);
-}, []);
+  useEffect(() => {
+    fetch('/api/brand')
+      .then((res) => res.json())
+      .then(setBrands)
+      .catch(console.error);
+  }, []);
 
 
   useEffect(() => {
@@ -93,6 +94,11 @@ useEffect(() => {
     setSizeList([...sizeList, '']);
   };
 
+  
+  const handleAddName = () => {
+    setNameList([...nameList, '']);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -109,12 +115,13 @@ useEffect(() => {
       discount,
       img,
       video,
-      delivery: delivery+"",
+      delivery: delivery + "",
       category: selectedCategory,
       subcategory: selectedSubCategory,
       type: productType,
       brand: selectedBrand,
       sizes: sizeList,
+      names: nameList,
       ...(productType === 'single' ? { stock } : { colors: colorQtyList }),
       ...(isNewArrival && { arrival: 'yes' }),
     };
@@ -203,18 +210,18 @@ useEffect(() => {
       )}
 
 
-<label className="block font-bold">Brand</label>
-<select
-  value={selectedBrand}
-  onChange={(e) => setSelectedBrand(e.target.value)}
-  className="w-full border p-2 mb-4"
-  required
->
-  <option value="" disabled>Select a brand</option>
-  {brands.map((b, i) => (
-    <option key={i} value={b.name}>{b.name}</option>
-  ))}
-</select>
+      <label className="block font-bold">Brand</label>
+      <select
+        value={selectedBrand}
+        onChange={(e) => setSelectedBrand(e.target.value)}
+        className="w-full border p-2 mb-4"
+        required
+      >
+        <option value="" disabled>Select a brand</option>
+        {brands.map((b, i) => (
+          <option key={i} value={b.name}>{b.name}</option>
+        ))}
+      </select>
 
 
       <input
@@ -250,7 +257,7 @@ useEffect(() => {
         placeholder="Points"
         value={points}
         onChange={(e) => setPts(e.target.value)}
-        className="w-full border p-2 mb-4" 
+        className="w-full border p-2 mb-4"
       />
 
       {productType === 'single' && (
@@ -334,6 +341,32 @@ useEffect(() => {
           className="text-blue-500"
         >
           + Add Size
+        </button>
+      </div>
+
+
+      <div className="mb-4">
+        <label className="font-bold block">Names</label>
+        {nameList.map((name, idx) => (
+          <input
+            key={idx}
+            type="text"
+            placeholder={`Name ${idx + 1}`}
+            value={name}
+            onChange={(e) => {
+              const updated = [...nameList];
+              updated[idx] = e.target.value;
+              setNameList(updated);
+            }}
+            className="w-full border p-2 mb-2"
+          />
+        ))}
+        <button
+          type="button"
+          onClick={handleAddName}
+          className="text-blue-500"
+        >
+          + Add Name
         </button>
       </div>
 

@@ -19,6 +19,7 @@ model Product {
   brand       String?
   colors      Json?
   sizes       Json?
+  names       Json?
   stock       String?
   points       String?
   delivery    String

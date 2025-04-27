@@ -162,6 +162,7 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [subcategories, setSubcategories] = useState([]);
   const [colors, setColors] = useState(product.colors || []);
   const [sizes, setSizes] = useState(product.sizes || []);
+  const [names, setNames] = useState(product.names || []);
   const [allColors, setAllColors] = useState([]);
   const [newColor, setNewColor] = useState('');
   const [newQty, setNewQty] = useState('');
@@ -222,6 +223,19 @@ const [brands, setBrands] = useState([]);
     setSizes(newSizes);
   };
 
+
+  const handleAddName = () => setNames([...names, '']);
+  const handleNameChange = (val, idx) => {
+    const newNames = [...names];
+    newNames[idx] = val;
+    setNames(newNames);
+  };
+  const handleRemoveName = (idx) => {
+    const newNames = [...names];
+    newNames.splice(idx, 1);
+    setNames(newNames);
+  };
+
   const filteredSub = subcategories.filter(s => s.category === category);
   const filteredColors = allColors.filter(c => c.category === category);
 
@@ -243,6 +257,7 @@ const [brands, setBrands] = useState([]);
       arrival: arrival ? 'yes' : 'no',
       colors: mode === 'collection' ? colors : [],
       sizes,
+      names,
       brand,
     };
     onSave(payload);
@@ -355,6 +370,26 @@ const [brands, setBrands] = useState([]);
         </div>
       ))}
       <button type="button" onClick={handleAddSize} className="bg-blue-500 text-white px-2 py-1 mb-4">Add Size</button>
+
+
+
+
+
+
+      <h3 className="font-bold mb-1">Names</h3>
+      {names.map((s, i) => (
+        <div key={i} className="flex gap-2 mb-2">
+          <input value={s} onChange={(e) => handleNameChange(e.target.value, i)} className="border p-2 flex-1" />
+          <button type="button" onClick={() => handleRemoveName(i)} className="text-red-500 font-bold">×</button>
+        </div>
+      ))}
+      <button type="button" onClick={handleAddName} className="bg-blue-500 text-white px-2 py-1 mb-4">Add Name</button>
+
+
+
+
+
+
 
       <div className="flex gap-2">
         <button type="submit" className="bg-green-600 text-white px-4 py-2">Save</button>
