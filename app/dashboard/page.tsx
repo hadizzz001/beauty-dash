@@ -103,8 +103,7 @@ export default function ProductTable() {
             <th className="border p-2">Title</th>
             <th className="border p-2">Image</th>
             <th className="border p-2">Price</th>
-            <th className="border p-2">Discount</th>
-            <th className="border p-2">Stock</th>
+            <th className="border p-2">Discount</th> 
             <th className="border p-2">Category</th>
             <th className="border p-2">Subcategory</th>
             <th className="border p-2">Best Seller</th>
@@ -123,8 +122,7 @@ export default function ProductTable() {
                 )}
               </td>
               <td className="border p-2">{p.price}</td>
-              <td className="border p-2">{p.discount}</td>
-              <td className="border p-2">{p.stock ?? "N/A"}</td>
+              <td className="border p-2">{p.discount}</td> 
               <td className="border p-2">{p.category}</td>
               <td className="border p-2">{p.subcategory}</td>
               <td className="border p-2">{p.arrival}</td>
@@ -140,16 +138,15 @@ export default function ProductTable() {
   );
 }
 
- 
 
- 
+
+
 
 function EditProductForm({ product, onCancel, onSave }) {
   const [title, setTitle] = useState(product.title);
   const [price, setPrice] = useState(product.price);
   const [points, setPts] = useState(product.points);
   const [discount, setDiscount] = useState(product.discount || '');
-  const [stock, setStock] = useState(product.stock || '');
   const [description, setDescription] = useState(product.description);
   const [img, setImg] = useState(product.img);
   const [video, setVideo] = useState(product.video || []);
@@ -157,17 +154,12 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [category, setCategory] = useState(product.category || '');
   const [subcategory, setSubcategory] = useState(product.subcategory || '');
   const [arrival, setArrival] = useState(product.arrival === 'yes');
-  const [mode, setMode] = useState(product.colors?.length ? 'collection' : '1');
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
-  const [colors, setColors] = useState(product.colors || []);
   const [sizes, setSizes] = useState(product.sizes || []);
-  const [names, setNames] = useState(product.names || []);
-  const [allColors, setAllColors] = useState([]);
-  const [newColor, setNewColor] = useState('');
-  const [newQty, setNewQty] = useState('');
+  const [names, setNames] = useState(product.names || []); 
   const [brand, setBrand] = useState(product.brand || '');
-const [brands, setBrands] = useState([]);
+  const [brands, setBrands] = useState([]);
 
 
   useEffect(() => {
@@ -179,48 +171,31 @@ const [brands, setBrands] = useState([]);
         fetch('/api/brand').then(res => res.json())
       ]);
       setCategories(cat);
-      setSubcategories(sub);
-      setAllColors(col);
+      setSubcategories(sub); 
       setBrands(br);
     };
     fetchAll();
   }, []);
 
   const handleCategoryChange = (val) => {
-    setCategory(val);
-    setColors([]);
+    setCategory(val); 
   };
 
-  const handleAddColor = () => {
-    const selected = allColors.find(c => c.code === newColor);
-    if (selected && newQty) {
-      setColors([
-        ...colors,
-        {
-          code: selected.code,
-          img: selected.img && Array.isArray(selected.img) ? selected.img : [selected.img || ''],
-          qty: newQty
-        }
-      ]);
-      setNewColor('');
-      setNewQty('');
-    }
-  };
+ 
 
-  const handleRemoveColor = (clr) => {
-    setColors(colors.filter(c => c.code !== clr));
+  const handleSizeChange = (index, field, value) => {
+    const updatedSizes = [...sizes];
+    updatedSizes[index][field] = value;
+    setSizes(updatedSizes);
   };
-
-  const handleAddSize = () => setSizes([...sizes, '']);
-  const handleSizeChange = (val, idx) => {
-    const newSizes = [...sizes];
-    newSizes[idx] = val;
-    setSizes(newSizes);
+  
+  const handleAddSize = () => {
+    setSizes([...sizes, { size: '', price: '' }]);
   };
-  const handleRemoveSize = (idx) => {
-    const newSizes = [...sizes];
-    newSizes.splice(idx, 1);
-    setSizes(newSizes);
+  
+  const handleRemoveSize = (index) => {
+    const updatedSizes = sizes.filter((_, i) => i !== index);
+    setSizes(updatedSizes);
   };
 
 
@@ -236,8 +211,7 @@ const [brands, setBrands] = useState([]);
     setNames(newNames);
   };
 
-  const filteredSub = subcategories.filter(s => s.category === category);
-  const filteredColors = allColors.filter(c => c.category === category);
+  const filteredSub = subcategories.filter(s => s.category === category); 
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -247,7 +221,6 @@ const [brands, setBrands] = useState([]);
       price,
       points,
       discount,
-      stock: mode === '1' ? stock : null,
       img,
       video,
       delivery,
@@ -255,7 +228,6 @@ const [brands, setBrands] = useState([]);
       category,
       subcategory,
       arrival: arrival ? 'yes' : 'no',
-      colors: mode === 'collection' ? colors : [],
       sizes,
       names,
       brand,
@@ -266,14 +238,7 @@ const [brands, setBrands] = useState([]);
   return (
     <form onSubmit={handleSubmit} className="bg-gray-100 p-4 mb-6 rounded">
       <h2 className="text-xl font-bold mb-4">Edit Product</h2>
-
-      <div className="mb-2">
-        <label>Mode:</label>
-        <div className="flex gap-4 mt-1">
-          <label><input type="radio" checked={mode === '1'} onChange={() => setMode('1')} /> 1 Item</label>
-          <label><input type="radio" checked={mode === 'collection'} onChange={() => setMode('collection')} /> Collection</label>
-        </div>
-      </div>
+ 
 
       <input className="w-full p-2 border mb-2" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
 
@@ -283,45 +248,43 @@ const [brands, setBrands] = useState([]);
       </select>
 
       {category && filteredSub.length > 0 && (
-  <select
-    className="w-full p-2 border mb-2"
-    value={subcategory}
-    onChange={(e) => setSubcategory(e.target.value)}
-    required
-  >
-    <option value="">Select Subcategory</option>
-    {filteredSub.map((sub) => (
-      <option key={sub.id} value={sub.name}>
-        {sub.name}
-      </option>
-    ))}
-  </select>
-)}
+        <select
+          className="w-full p-2 border mb-2"
+          value={subcategory}
+          onChange={(e) => setSubcategory(e.target.value)}
+          required
+        >
+          <option value="">Select Subcategory</option>
+          {filteredSub.map((sub) => (
+            <option key={sub.id} value={sub.name}>
+              {sub.name}
+            </option>
+          ))}
+        </select>
+      )}
 
 
-<select
-  className="w-full p-2 border mb-2"
-  value={brand}
-  onChange={(e) => setBrand(e.target.value)}
-  required
->
-  <option value="">Select Brand</option>
-  {brands.map((b) => (
-    <option key={b.id} value={b.name}>
-      {b.name}
-    </option>
-  ))}
-</select>
+      <select
+        className="w-full p-2 border mb-2"
+        value={brand}
+        onChange={(e) => setBrand(e.target.value)}
+        
+      >
+        <option value="">Select Brand</option>
+        {brands.map((b) => (
+          <option key={b.id} value={b.name}>
+            {b.name}
+          </option>
+        ))}
+      </select>
 
 
 
       <input className="w-full p-2 border mb-2" type="number" value={points} onChange={(e) => setPts(e.target.value)} placeholder="Points" />
-      <input className="w-full p-2 border mb-2" type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price" />
-      <input className="w-full p-2 border mb-2" type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="Discount" />
+      <input className="w-full p-2 border mb-2" type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price before" />
+      <input className="w-full p-2 border mb-2" type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="Final Price" />
 
-      {mode === '1' && (
-        <input className="w-full p-2 border mb-2" type="number" value={stock} onChange={(e) => setStock(e.target.value)} placeholder="Stock" />
-      )}
+ 
 
       <ReactQuill value={description} onChange={setDescription} className="mb-4" theme="snow" />
 
@@ -333,43 +296,41 @@ const [brands, setBrands] = useState([]);
       <Upload1 onFilesUpload={(url) => setVideo(url)} />
 
       <input className="w-full p-2 border my-4" value={delivery} onChange={(e) => setDelivery(e.target.value)} placeholder="Delivery Info" />
-
-      {mode === 'collection' && (
-        <>
-          <h3 className="font-bold mb-1">Colors</h3>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {colors.map((c, i) => (
-              <span key={i} className="bg-gray-300 px-2 py-1 rounded flex items-center gap-1">
-                {Array.isArray(c.img) && c.img[0] && (
-                  <img src={c.img[0]} alt={c.code} className="w-4 h-4 rounded-full" />
-                )}
-                {c.code} ({c.qty})
-                <button type="button" onClick={() => handleRemoveColor(c.code)} className="text-red-500 font-bold ml-1">×</button>
-              </span>
-            ))}
-          </div>
-
-          <div className="flex gap-2 mb-4">
-            <select value={newColor} onChange={(e) => setNewColor(e.target.value)} className="border p-2 flex-1">
-              <option value="">Select Color</option>
-              {filteredColors.map((c) => (
-                <option key={c.code} value={c.code}>{c.code}</option>
-              ))}
-            </select>
-            <input value={newQty} onChange={(e) => setNewQty(e.target.value)} placeholder="Qty" className="border p-2 w-24" />
-            <button type="button" onClick={handleAddColor} className="bg-green-500 text-white px-2">Add</button>
-          </div>
-        </>
-      )}
+ 
 
       <h3 className="font-bold mb-1">Sizes</h3>
-      {sizes.map((s, i) => (
-        <div key={i} className="flex gap-2 mb-2">
-          <input value={s} onChange={(e) => handleSizeChange(e.target.value, i)} className="border p-2 flex-1" />
-          <button type="button" onClick={() => handleRemoveSize(i)} className="text-red-500 font-bold">×</button>
-        </div>
-      ))}
-      <button type="button" onClick={handleAddSize} className="bg-blue-500 text-white px-2 py-1 mb-4">Add Size</button>
+{sizes.map((s, i) => (
+  <div key={i} className="flex gap-2 mb-2">
+    <input
+      value={s.size}
+      onChange={(e) => handleSizeChange(i, 'size', e.target.value)}
+      placeholder="Size"
+      className="border p-2 flex-1"
+    />
+    <input
+      type="number"
+      value={s.price}
+      onChange={(e) => handleSizeChange(i, 'price', e.target.value)}
+      placeholder="Price"
+      className="border p-2 flex-1"
+    />
+    <button
+      type="button"
+      onClick={() => handleRemoveSize(i)}
+      className="text-red-500 font-bold"
+    >
+      ×
+    </button>
+  </div>
+))}
+<button
+  type="button"
+  onClick={handleAddSize}
+  className="bg-blue-500 text-white px-2 py-1 mb-4"
+>
+  Add Size
+</button>
+
 
 
 
@@ -386,10 +347,7 @@ const [brands, setBrands] = useState([]);
       <button type="button" onClick={handleAddName} className="bg-blue-500 text-white px-2 py-1 mb-4">Add Name</button>
 
 
-
-
-
-
+ 
 
       <div className="flex gap-2">
         <button type="submit" className="bg-green-600 text-white px-4 py-2">Save</button>
