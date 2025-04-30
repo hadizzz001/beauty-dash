@@ -13,7 +13,7 @@ export default function AddProduct() {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [points, setPts] = useState('');
-  const [discount, setDiscount] = useState(''); 
+  const [discount, setDiscount] = useState('');
   const [img, setImg] = useState(['']);
   const [video, setVideo] = useState(['']);
   const [delivery, setDelivery] = useState('');
@@ -22,12 +22,13 @@ export default function AddProduct() {
   const [allSubCategories, setAllSubCategories] = useState([]);
   const [filteredSubCategories, setFilteredSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
-  const [isNewArrival, setIsNewArrival] = useState(false);  
+  const [isNewArrival, setIsNewArrival] = useState(false);
   const [sizeList, setSizeList] = useState([{ size: '', price: '' }]);
-  const [nameList, setNameList] = useState(['']); 
+  const [nameList, setNameList] = useState(['']);
   const [brands, setBrands] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('');
   const [showPrice, setShowPrice] = useState('with');
+  const [optionType, setOptionType] = useState("size");
 
 
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function AddProduct() {
     setSelectedSubCategory('');
   }, [selectedCategory, allSubCategories]);
 
-  
+
 
   const handleImgChange = (url) => {
     if (url) setImg(url);
@@ -68,13 +69,13 @@ export default function AddProduct() {
 
   const handleVideoChange = (url) => {
     if (url) setVideo(url);
-  }; 
+  };
 
   const handleAddSize = () => {
     setSizeList([...sizeList, { size: '', price: '' }]);
   };
 
-  
+
   const handleAddName = () => {
     setNameList([...nameList, '']);
   };
@@ -97,7 +98,7 @@ export default function AddProduct() {
       video,
       delivery: delivery + "",
       category: selectedCategory,
-      subcategory: selectedSubCategory, 
+      subcategory: selectedSubCategory,
       brand: selectedBrand,
       sizes: sizeList,
       names: nameList,
@@ -131,7 +132,7 @@ export default function AddProduct() {
         required
       />
 
- 
+
 
       {/* Category */}
       <label className="block font-bold">Category</label>
@@ -170,7 +171,7 @@ export default function AddProduct() {
         value={selectedBrand}
         onChange={(e) => setSelectedBrand(e.target.value)}
         className="w-full border p-2 mb-4"
-        
+
       >
         <option value="" disabled>Select a brand</option>
         {brands.map((b, i) => (
@@ -180,42 +181,42 @@ export default function AddProduct() {
 
 
       <div>
-      <div className="mb-4">
-        <label className="mr-4">
-          <input
-            type="radio"
-            name="priceToggle"
-            value="with"
-            checked={showPrice === 'with'}
-            onChange={() => setShowPrice('with')}
-            className="mr-1"
-          />
-          With Discount
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="priceToggle"
-            value="without"
-            checked={showPrice === 'without'}
-            onChange={() => setShowPrice('without')}
-            className="mr-1"
-          />
-          Without Discount
-        </label>
-      </div>
+        <div className="mb-4">
+          <label className="mr-4">
+            <input
+              type="radio"
+              name="priceToggle"
+              value="with"
+              checked={showPrice === 'with'}
+              onChange={() => setShowPrice('with')}
+              className="mr-1"
+            />
+            With Discount
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="priceToggle"
+              value="without"
+              checked={showPrice === 'without'}
+              onChange={() => setShowPrice('without')}
+              className="mr-1"
+            />
+            Without Discount
+          </label>
+        </div>
 
-      {showPrice === 'with' && (
-        <input
-          type="number"
-          step="0.01"
-          placeholder="Price Before"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="w-full border p-2 mb-4"
-        />
-      )}
-    </div>
+        {showPrice === 'with' && (
+          <input
+            type="number"
+            step="0.01"
+            placeholder="Price Before"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full border p-2 mb-4"
+          />
+        )}
+      </div>
 
       <input
         type="number"
@@ -245,49 +246,80 @@ export default function AddProduct() {
         required
       />
 
- 
 
- 
-<div className="mb-4">
-  <label className="font-bold block">Sizes & Prices</label>
-  {sizeList.map((entry, idx) => (
-    <div key={idx} className="flex gap-2 mb-2">
-      <input
-        type="text"
-        placeholder={`Size ${idx + 1}`}
-        value={entry.size}
-        onChange={(e) => {
-          const updated = [...sizeList];
-          updated[idx].size = e.target.value;
-          setSizeList(updated);
-        }}
-        className="w-1/2 border p-2"
-      />
-      <input
-        type="number"
-        step="0.01"
-        placeholder="Price"
-        value={entry.price}
-        onChange={(e) => {
-          const updated = [...sizeList];
-          updated[idx].price = e.target.value;
-          setSizeList(updated);
-        }}
-        className="w-1/2 border p-2"
-      />
+
+
+<div>
+    {/* Radio Button Toggle */}
+    <div className="mb-4">
+      <label className="font-bold block mb-2">Select Option Type</label>
+      <label className="mr-4">
+        <input
+          type="radio"
+          name="optionType"
+          value="size"
+          checked={optionType === "size"}
+          onChange={() => setOptionType("size")}
+          className="mr-1"
+        />
+        Size
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="optionType"
+          value="name"
+          checked={optionType === "name"}
+          onChange={() => setOptionType("name")}
+          className="mr-1"
+        />
+        Name
+      </label>
     </div>
-  ))}
-  <button
-    type="button"
-    onClick={handleAddSize}
-    className="text-blue-500"
-  >
-    + Add Size
-  </button>
-</div>
 
+    {/* Sizes & Prices (shown only if 'size' is selected) */}
+    {optionType === "size" && (
+      <div className="mb-4">
+        <label className="font-bold block">Sizes & Prices</label>
+        {sizeList.map((entry, idx) => (
+          <div key={idx} className="flex gap-2 mb-2">
+            <input
+              type="text"
+              placeholder={`Size ${idx + 1}`}
+              value={entry.size}
+              onChange={(e) => {
+                const updated = [...sizeList];
+                updated[idx].size = e.target.value;
+                setSizeList(updated);
+              }}
+              className="w-1/2 border p-2"
+            />
+            <input
+              type="number"
+              step="0.01"
+              placeholder="Price"
+              value={entry.price}
+              onChange={(e) => {
+                const updated = [...sizeList];
+                updated[idx].price = e.target.value;
+                setSizeList(updated);
+              }}
+              className="w-1/2 border p-2"
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={handleAddSize}
+          className="text-blue-500"
+        >
+          + Add Size
+        </button>
+      </div>
+    )}
 
-
+    {/* Names (shown only if 'name' is selected) */}
+    {optionType === "name" && (
       <div className="mb-4">
         <label className="font-bold block">Names</label>
         {nameList.map((name, idx) => (
@@ -312,6 +344,8 @@ export default function AddProduct() {
           + Add Name
         </button>
       </div>
+    )}
+  </div> 
 
       <label className="block text-lg font-bold mb-2">Description</label>
       <ReactQuill

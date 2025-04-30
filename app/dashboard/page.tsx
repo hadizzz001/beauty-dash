@@ -103,7 +103,7 @@ export default function ProductTable() {
             <th className="border p-2">Title</th>
             <th className="border p-2">Image</th>
             <th className="border p-2">Price</th>
-            <th className="border p-2">Discount</th> 
+            <th className="border p-2">Discount</th>
             <th className="border p-2">Category</th>
             <th className="border p-2">Subcategory</th>
             <th className="border p-2">Best Seller</th>
@@ -122,7 +122,7 @@ export default function ProductTable() {
                 )}
               </td>
               <td className="border p-2">{p.price}</td>
-              <td className="border p-2">{p.discount}</td> 
+              <td className="border p-2">{p.discount}</td>
               <td className="border p-2">{p.category}</td>
               <td className="border p-2">{p.subcategory}</td>
               <td className="border p-2">{p.arrival}</td>
@@ -157,7 +157,7 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [sizes, setSizes] = useState(product.sizes || []);
-  const [names, setNames] = useState(product.names || []); 
+  const [names, setNames] = useState(product.names || []);
   const [brand, setBrand] = useState(product.brand || '');
   const [brands, setBrands] = useState([]);
 
@@ -171,28 +171,28 @@ function EditProductForm({ product, onCancel, onSave }) {
         fetch('/api/brand').then(res => res.json())
       ]);
       setCategories(cat);
-      setSubcategories(sub); 
+      setSubcategories(sub);
       setBrands(br);
     };
     fetchAll();
   }, []);
 
   const handleCategoryChange = (val) => {
-    setCategory(val); 
+    setCategory(val);
   };
 
- 
+
 
   const handleSizeChange = (index, field, value) => {
     const updatedSizes = [...sizes];
     updatedSizes[index][field] = value;
     setSizes(updatedSizes);
   };
-  
+
   const handleAddSize = () => {
     setSizes([...sizes, { size: '', price: '' }]);
   };
-  
+
   const handleRemoveSize = (index) => {
     const updatedSizes = sizes.filter((_, i) => i !== index);
     setSizes(updatedSizes);
@@ -211,7 +211,7 @@ function EditProductForm({ product, onCancel, onSave }) {
     setNames(newNames);
   };
 
-  const filteredSub = subcategories.filter(s => s.category === category); 
+  const filteredSub = subcategories.filter(s => s.category === category);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -235,10 +235,13 @@ function EditProductForm({ product, onCancel, onSave }) {
     onSave(payload);
   };
 
+  const hasSizes = sizes.some(s => s.size || s.price);
+const hasNames = names.some(n => n.trim() !== '');
+
   return (
     <form onSubmit={handleSubmit} className="bg-gray-100 p-4 mb-6 rounded">
       <h2 className="text-xl font-bold mb-4">Edit Product</h2>
- 
+
 
       <input className="w-full p-2 border mb-2" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
 
@@ -268,7 +271,7 @@ function EditProductForm({ product, onCancel, onSave }) {
         className="w-full p-2 border mb-2"
         value={brand}
         onChange={(e) => setBrand(e.target.value)}
-        
+
       >
         <option value="">Select Brand</option>
         {brands.map((b) => (
@@ -284,7 +287,7 @@ function EditProductForm({ product, onCancel, onSave }) {
       <input className="w-full p-2 border mb-2" type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price before" />
       <input className="w-full p-2 border mb-2" type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="Final Price" />
 
- 
+
 
       <ReactQuill value={description} onChange={setDescription} className="mb-4" theme="snow" />
 
@@ -296,58 +299,79 @@ function EditProductForm({ product, onCancel, onSave }) {
       <Upload1 onFilesUpload={(url) => setVideo(url)} />
 
       <input className="w-full p-2 border my-4" value={delivery} onChange={(e) => setDelivery(e.target.value)} placeholder="Delivery Info" />
- 
 
-      <h3 className="font-bold mb-1">Sizes</h3>
-{sizes.map((s, i) => (
-  <div key={i} className="flex gap-2 mb-2">
-    <input
-      value={s.size}
-      onChange={(e) => handleSizeChange(i, 'size', e.target.value)}
-      placeholder="Size"
-      className="border p-2 flex-1"
-    />
-    <input
-      type="number"
-      value={s.price}
-      onChange={(e) => handleSizeChange(i, 'price', e.target.value)}
-      placeholder="Price"
-      className="border p-2 flex-1"
-    />
+
+{/* Show Sizes only if names are empty */}
+{!hasNames && (
+  <>
+    <h3 className="font-bold mb-1">Sizes</h3>
+    {sizes.map((s, i) => (
+      <div key={i} className="flex gap-2 mb-2">
+        <input
+          value={s.size}
+          onChange={(e) => handleSizeChange(i, 'size', e.target.value)}
+          placeholder="Size"
+          className="border p-2 flex-1"
+        />
+        <input
+          type="number"
+          value={s.price}
+          onChange={(e) => handleSizeChange(i, 'price', e.target.value)}
+          placeholder="Price"
+          className="border p-2 flex-1"
+        />
+        <button
+          type="button"
+          onClick={() => handleRemoveSize(i)}
+          className="text-red-500 font-bold"
+        >
+          ×
+        </button>
+      </div>
+    ))}
     <button
       type="button"
-      onClick={() => handleRemoveSize(i)}
-      className="text-red-500 font-bold"
+      onClick={handleAddSize}
+      className="bg-blue-500 text-white px-2 py-1 mb-4"
     >
-      ×
+      Add Size
     </button>
-  </div>
-))}
-<button
-  type="button"
-  onClick={handleAddSize}
-  className="bg-blue-500 text-white px-2 py-1 mb-4"
->
-  Add Size
-</button>
+  </>
+)}
+
+{/* Show Names only if sizes are empty */}
+{!hasSizes && (
+  <>
+    <h3 className="font-bold mb-1">Names</h3>
+    {names.map((s, i) => (
+      <div key={i} className="flex gap-2 mb-2">
+        <input
+          value={s}
+          onChange={(e) => handleNameChange(e.target.value, i)}
+          className="border p-2 flex-1"
+        />
+        <button
+          type="button"
+          onClick={() => handleRemoveName(i)}
+          className="text-red-500 font-bold"
+        >
+          ×
+        </button>
+      </div>
+    ))}
+    <button
+      type="button"
+      onClick={handleAddName}
+      className="bg-blue-500 text-white px-2 py-1 mb-4"
+    >
+      Add Name
+    </button>
+  </>
+)}
 
 
 
 
-
-
-
-      <h3 className="font-bold mb-1">Names</h3>
-      {names.map((s, i) => (
-        <div key={i} className="flex gap-2 mb-2">
-          <input value={s} onChange={(e) => handleNameChange(e.target.value, i)} className="border p-2 flex-1" />
-          <button type="button" onClick={() => handleRemoveName(i)} className="text-red-500 font-bold">×</button>
-        </div>
-      ))}
-      <button type="button" onClick={handleAddName} className="bg-blue-500 text-white px-2 py-1 mb-4">Add Name</button>
-
-
- 
 
       <div className="flex gap-2">
         <button type="submit" className="bg-green-600 text-white px-4 py-2">Save</button>
