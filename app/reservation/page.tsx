@@ -235,12 +235,12 @@ const page = () => {
                 >
                   View
                 </a>
-                {/* <button
+                <button
                   onClick={() => handleDeleteOrder(post.id)}
                   className="bg-red-500 text-white p-2 w-20 h-10"
                 >
                   Delete
-                </button> */}
+                </button>
  
               </td>
             </tr>

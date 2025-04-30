@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 
 const page = () => {
 
-    const [allTemp1, setTemp1] = useState() 
+    const [allTemp1, setTemp1] = useState()
     const searchParams = useSearchParams()
     const search = searchParams.get('id')
     const [updatedNums, setUpdatedNums] = useState({});
@@ -38,7 +38,7 @@ const page = () => {
             console.error('Failed to fetch products');
         }
     };
- 
+
 
 
 
@@ -69,36 +69,36 @@ const page = () => {
 
     const handleInputChange = (id, value) => {
         setUpdatedNums((prev) => ({
-          ...prev,
-          [id]: value, // Store num for the specific order
+            ...prev,
+            [id]: value, // Store num for the specific order
         }));
-      };
-    
-      const handleUpdate = async (id) => {
+    };
+
+    const handleUpdate = async (id) => {
         const numToUpdate = updatedNums[id]; // Get the updated num for this order
-    
+
         if (!numToUpdate) return; // Prevent empty values from being sent
-    
+
         try {
-          const response = await fetch(`/api/order2/${id}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ remark: numToUpdate }),
-          });
-    
-          const result = await response.json();
-    
-          if (response.ok) {
-            console.log("Receipt number updated:", result);
-          } else {
-            console.error("Failed to update receipt number:", result);
-          }
+            const response = await fetch(`/api/order2/${id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ remark: numToUpdate }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                console.log("Receipt number updated:", result);
+            } else {
+                console.error("Failed to update receipt number:", result);
+            }
         } catch (error) {
-          console.error("Error updating receipt number:", error);
+            console.error("Error updating receipt number:", error);
         }
-      };
+    };
 
 
 
@@ -113,9 +113,7 @@ const page = () => {
                                 <table className="w-full">
                                     <thead>
                                         <tr>
-                                            <th className="text-left font-semibold">Product</th>
-                                            <th className="text-left font-semibold">Price</th>
-                                            <th className="text-left font-semibold">Color</th>
+                                            <th className="text-left font-semibold">Product</th> 
                                             <th className="text-left font-semibold">Size</th>
                                             <th className="text-left font-semibold">Name</th>
                                             <th className="text-left font-semibold">Quantity</th>
@@ -132,17 +130,32 @@ const page = () => {
                                                             <div className="flex items-center">
                                                                 <span className="font-semibold">{temp.title}</span>
                                                             </div>
+                                                        </td> 
+                                                        <td className="py-4">
+                                                            {temp.selectedSizes.map((item, index) => (
+                                                                <div key={index}>
+                                                                    Size: {item.size}, Price: {item.price}, Qty: {item.qty}
+                                                                </div>
+                                                            ))}
                                                         </td>
-                                                        <td className="py-4">${temp.discount } </td>
-                                                        <td className="py-4">{temp.selectedColor } </td>
-                                                        <td className="py-4">{temp.selectedSize } </td>
-                                                        <td className="py-4">{temp.selectedName } </td>
+
+                                                        <td className="py-4">
+                                                            {temp.selectedNames.map((item, index) => (
+                                                                <div key={index}>
+                                                                    Name: {item.name}, Qty: {item.qty}
+                                                                </div>
+                                                            ))}
+                                                        </td>
+
                                                         <td className="py-4">
                                                             <div className="flex items-center">
                                                                 <span className="text-center w-8">{temp.quantity}</span>
                                                             </div>
                                                         </td>
-                                                        <td className="py-4">${(temp.discount ) * temp.quantity} </td>
+                                                        <td className="py-4">{!(temp.selectedSizes && temp.selectedSizes.length > 0) && (
+  <span>${(temp.discount) * temp.quantity}</span>
+)}
+ </td>
 
 
 
@@ -167,66 +180,66 @@ const page = () => {
                             </div>
                         </div>
                         <div className="col-md-4">
-    <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-lg font-semibold mb-4">Customer Details</h2>
+                            <div className="bg-white rounded-lg shadow-md p-6">
+                                <h2 className="text-lg font-semibold mb-4">Customer Details</h2>
 
-        {allTemp1 && Object?.keys(allTemp1).length > 0 ? (
-            <>
-                <div className="flex justify-between mb-2">
-                    <span>Name</span>
-                    <span>{allTemp1.cartItems.fname} {allTemp1.cartItems.lname}</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                    <span>Phone</span>
-                    <span>{allTemp1.cartItems.phone}</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                    <span>Address</span>
-                    <span>{allTemp1.cartItems.address}</span>
-                </div>
-                <hr className="my-2" />
-                {/* <div className="flex justify-between mb-2">
+                                {allTemp1 && Object?.keys(allTemp1).length > 0 ? (
+                                    <>
+                                        <div className="flex justify-between mb-2">
+                                            <span>Name</span>
+                                            <span>{allTemp1.cartItems.fname} {allTemp1.cartItems.lname}</span>
+                                        </div>
+                                        <div className="flex justify-between mb-2">
+                                            <span>Phone</span>
+                                            <span>{allTemp1.cartItems.phone}</span>
+                                        </div>
+                                        <div className="flex justify-between mb-2">
+                                            <span>Address</span>
+                                            <span>{allTemp1.cartItems.address}</span>
+                                        </div>
+                                        <hr className="my-2" />
+                                        {/* <div className="flex justify-between mb-2">
                     <span className="font-semibold">Total Items</span>
                     <span className="font-semibold">{finalTotal.totalItems}</span>
                 </div> */}
-                {/* <div className="flex justify-between mb-2">
+                                        {/* <div className="flex justify-between mb-2">
                     <span className="font-semibold">Code</span>
                     <span className="font-semibold">{allTemp1.code}</span>
                 </div> */}
-                <div className="flex justify-between mb-2">
-                    <span className="font-semibold">Delivery Amount</span>
-                    <span className="font-semibold">{allTemp1.delivery}</span>
-                </div> 
-                <div className="flex justify-between mb-2">
-                    <span className="font-semibold">Total Amount</span>
-                    <span className="font-semibold">${allTemp1.total}</span>
-                </div> 
-                <div className="flex justify-between mb-2">
-                    <span className="font-semibold">Note:</span>
-                    <span className="font-semibold">{allTemp1?.note}</span> 
-                </div> 
-                <div className="mt-4"> 
-                <textarea 
-                      value={updatedNums[allTemp1.id] || allTemp1.remark || ""}
-                      onChange={(e) => handleInputChange(allTemp1.id, e.target.value)}
-                      placeholder="Enter your remark"
-                      className="border p-1"
-                    /><br/>
-                    <button
-                      onClick={() => handleUpdate(allTemp1.id)}
-                      className="bg-blue-500 text-white p-1 ml-2"
-                    >
-                      Save
-                    </button>
-                </div>
-            </>
-        ) : (
-            <div className='home___error-container'>
-                <h2 className='text-black text-xl font-bold'>...</h2>
-            </div>
-        )}
-    </div>
-</div>
+                                        <div className="flex justify-between mb-2">
+                                            <span className="font-semibold">Delivery Amount</span>
+                                            <span className="font-semibold">{allTemp1.delivery}</span>
+                                        </div>
+                                        <div className="flex justify-between mb-2">
+                                            <span className="font-semibold">Total Amount</span>
+                                            <span className="font-semibold">${allTemp1.total}</span>
+                                        </div>
+                                        <div className="flex justify-between mb-2">
+                                            <span className="font-semibold">Note:</span>
+                                            <span className="font-semibold">{allTemp1?.note}</span>
+                                        </div>
+                                        <div className="mt-4">
+                                            <textarea
+                                                value={updatedNums[allTemp1.id] || allTemp1.remark || ""}
+                                                onChange={(e) => handleInputChange(allTemp1.id, e.target.value)}
+                                                placeholder="Enter your remark"
+                                                className="border p-1"
+                                            /><br />
+                                            <button
+                                                onClick={() => handleUpdate(allTemp1.id)}
+                                                className="bg-blue-500 text-white p-1 ml-2"
+                                            >
+                                                Save
+                                            </button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className='home___error-container'>
+                                        <h2 className='text-black text-xl font-bold'>...</h2>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
 
                     </div>
                 </div>
