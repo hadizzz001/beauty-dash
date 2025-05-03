@@ -17,6 +17,7 @@ model Product {
   category    String
   subcategory String?
   brand       String?
+  isOut       String?
   colors      Json?
   sizes       Json?
   names       Json?

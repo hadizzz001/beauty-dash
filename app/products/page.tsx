@@ -23,6 +23,7 @@ export default function AddProduct() {
   const [filteredSubCategories, setFilteredSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [isNewArrival, setIsNewArrival] = useState(false);
+  const [isOut, setIsOut] = useState(false);
   const [sizeList, setSizeList] = useState([{ size: '', price: '' }]);
   const [nameList, setNameList] = useState(['']);
   const [brands, setBrands] = useState([]);
@@ -101,8 +102,9 @@ export default function AddProduct() {
       subcategory: selectedSubCategory,
       brand: selectedBrand,
       sizes: sizeList,
-      names: nameList,
-      ...(isNewArrival && { arrival: 'yes' }),
+      names: nameList, 
+      ...(isNewArrival && { arrival: 'yes' }), 
+      ...(isOut && { isOut: 'yes' }), 
     };
 
     const res = await fetch('/api/products', {
@@ -118,6 +120,9 @@ export default function AddProduct() {
       alert('Failed to add product');
     }
   };
+ 
+  
+  
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-4">
@@ -369,6 +374,17 @@ export default function AddProduct() {
           className="mr-2"
         />
         <label htmlFor="newArrival" className="text-lg font-bold">Best Seller</label>
+      </div>
+
+      <div className="flex items-center my-4">
+        <input
+          type="checkbox"
+          id="isOut"
+          checked={isOut}
+          onChange={(e) => setIsOut(e.target.checked)}
+          className="mr-2"
+        />
+        <label htmlFor="isOut" className="text-lg font-bold">Out of Stock</label>
       </div>
 
       <button type="submit" className="bg-green-500 text-white px-4 py-2">

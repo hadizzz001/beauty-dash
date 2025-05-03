@@ -22,6 +22,7 @@ export async function PATCH(request, { params }) {
     delivery,
     brand,
     points,
+    isOut,
      
   } = await request.json();
 
@@ -49,7 +50,7 @@ export async function PATCH(request, { params }) {
         delivery,
         brand,
         points,
-         
+        isOut,
       },
     });
 

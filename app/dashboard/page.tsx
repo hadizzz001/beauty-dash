@@ -107,6 +107,7 @@ export default function ProductTable() {
             <th className="border p-2">Category</th>
             <th className="border p-2">Subcategory</th>
             <th className="border p-2">Best Seller</th>
+            <th className="border p-2">Out of Stock</th>
             <th className="border p-2">Actions</th>
           </tr>
         </thead>
@@ -126,6 +127,7 @@ export default function ProductTable() {
               <td className="border p-2">{p.category}</td>
               <td className="border p-2">{p.subcategory}</td>
               <td className="border p-2">{p.arrival}</td>
+              <td className="border p-2">{p.isOut}</td>
               <td className="border p-2">
                 <button onClick={() => handleEdit(p)} className="px-2 py-1 bg-yellow-500 text-white mr-2">Edit</button>
                 <button onClick={() => handleDelete(p.id)} className="px-2 py-1 bg-red-500 text-white">Delete</button>
@@ -154,6 +156,7 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [category, setCategory] = useState(product.category || '');
   const [subcategory, setSubcategory] = useState(product.subcategory || '');
   const [arrival, setArrival] = useState(product.arrival === 'yes');
+  const [isOut, setIsOut] = useState(product.isOut === 'yes');
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [sizes, setSizes] = useState(product.sizes || []);
@@ -228,6 +231,7 @@ function EditProductForm({ product, onCancel, onSave }) {
       category,
       subcategory,
       arrival: arrival ? 'yes' : 'no',
+      isOut: isOut ? 'yes' : 'no',
       sizes,
       names,
       brand,
@@ -293,6 +297,9 @@ const hasNames = names.some(n => n.trim() !== '');
 
       <div className="mb-4">
         <label><input type="checkbox" checked={arrival} onChange={(e) => setArrival(e.target.checked)} /> Best Seller</label>
+      </div>
+      <div className="mb-4">
+        <label><input type="checkbox" checked={isOut} onChange={(e) => setIsOut(e.target.checked)} /> Out of Stock</label>
       </div>
 
       <Upload onImagesUpload={(url) => setImg(url)} />
