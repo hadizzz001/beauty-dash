@@ -101,7 +101,7 @@ export default function ProductTable() {
         <thead>
           <tr className="bg-gray-100">
             <th className="border p-2">Title</th>
-            <th className="border p-2">Image</th>
+            {/* <th className="border p-2">Image</th> */}
             <th className="border p-2">Price</th>
             <th className="border p-2">Discount</th>
             <th className="border p-2">Category</th>
@@ -115,13 +115,13 @@ export default function ProductTable() {
           {filteredProducts.map((p) => (
             <tr key={p.id} className={p.stock === "0" ? "bg-red-200" : ""}>
               <td className="border p-2">{p.title}</td>
-              <td className="border p-2">
+              {/* <td className="border p-2">
                 {/\.(mp4|webm)/i.test(p.img[0]) ? (
                   <video src={p.img[0]} className="w-24" controls />
                 ) : (
                   <img src={p.img[0]} className="w-24" />
                 )}
-              </td>
+              </td> */}
               <td className="border p-2">{p.price}</td>
               <td className="border p-2">{p.discount}</td>
               <td className="border p-2">{p.category}</td>
