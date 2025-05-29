@@ -69,7 +69,9 @@ console.log("body are: ",body);
 export async function GET(req) {
   try {
     const products = await prisma.product.findMany({
-      
+      orderBy: {
+        id: 'desc', // Sort by latest id first
+      },
     });
 
     return new Response(JSON.stringify(products), {
@@ -84,3 +86,4 @@ export async function GET(req) {
     });
   }
 }
+
